@@ -1,12 +1,13 @@
-import sqlite3
+import psycopg2
 import time
 import  datetime
 import  numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from ScaleAndBuy import db_list
 
-def graph_it(column,table_name):
-    con = sqlite3.connect('retracer.sqlite')
+def graph_it(column,table_name,db_list):
+    con = sqlite3.connect(db_list)
     curs = con.cursor()
     sql = 'SELECT '+column+' From '+table_name+';'
     graphArray = []
@@ -26,7 +27,8 @@ def graph_it(column,table_name):
     axis.set_xlim([0,10000])
     plt.show()
 
-graph_it('Last','ohlc')
+graph_it('Last','ohlc',db_list)
+
 #
 # sql_two = 'SELECT ' + column + ' From ' + table_name + ';'
 # curs.execute(sql_two)

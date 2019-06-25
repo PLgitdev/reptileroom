@@ -1,4 +1,4 @@
-from sqlite3 import *
+import psycopg2
 
 
 def create_connection(db_list):
