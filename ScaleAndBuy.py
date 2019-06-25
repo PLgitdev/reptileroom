@@ -69,12 +69,12 @@ def target_search(con,OHLC,db_list):
                 break
 
 
-def ohlc_bittrex_grabber(market):
+def ohlc_bittrex_grabber(market,file_one):
     while True:
         r = requests.api.request(url='https://api.bittrex.com/api/v1.1/public/getmarketsummary?market='+market,method='GET')
         j_data = r.json()
         data = j_data
-        with open('C:/Users/P/Desktop/output2.json', 'w+') as open_file:
+        with open(file_one, 'w+') as open_file:
             open_file.truncate()
             data_string = str(data['result']).replace("'",'"')
             open_file.write(data_string)
@@ -82,21 +82,21 @@ def ohlc_bittrex_grabber(market):
         break
 
 
-def parse_json_file(json_file)->list:
+def parse_json_file(json_file) :
     with open(json_file,'r+') as openjson:
         json_list = openjson.read()
         OHLC = json.loads(json_list)
         return OHLC
 
 
-file_one = 'C:/Users/P/Desktop/output2.json'
+file_one = input('input a junk file path')
 user = input("please enter a db user name")
 password = input("please enter a db password name")
 db = input("please enter a db name")
 db_list = [user,password,'127.0.0.1','5432',db]
 market_input = input("please tell me a market format x-y: ")
 while True:
-    ohlc_bittrex_grabber(market_input)
+    ohlc_bittrex_grabber(market_input,file_one)
     data = parse_json_file(file_one)
     con = create_connection(db_list)
     insert_ohlc(con,data[0])
