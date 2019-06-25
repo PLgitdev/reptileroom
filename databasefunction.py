@@ -1,9 +1,13 @@
 from sqlite3 import *
 
 
-def create_connection(db_file):
+def create_connection(db_list):
     try:
-        connection = connect(db_file)
+        connection = psycopg2.connect(user = db_list[1] ,
+                password = db_list[2],
+                host = db_list[3],
+                port = db_list[4],
+                database = db_list[5])
         return connection
     except Exception:
         print(Exception)

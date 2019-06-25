@@ -44,13 +44,13 @@ class MarketAction:
             else:
                 print("not this time "+ str(i['Last']))
 
-def target_search(con,OHLC,file):
+def target_search(con,OHLC,db_list):
     for data in OHLC:
         highs = data['High']
         prevDay = data['PrevDay']
         bid = data['Bid']
         last = data['Last']
-        con = create_connection(file)
+        con = create_connection(db_list)
         compare = select_target(con,'Last','ohlc', 'Last  <= "'+str(last).strip(',')+'"')
         for i in compare:
             if last == prevDay or last ==highs or last==bid or last == i:
@@ -90,19 +90,23 @@ def parse_json_file(json_file)->list:
 
 
 file_one = 'C:/Users/P/Desktop/output2.json'
+user = input("please enter a db user name")
+password = input("please enter a db password name")
+db = input("please enter a db name")
+db_list = [user,password,'127.0.0.1','5432',db]
 market_input = input("please tell me a market format x-y: ")
 while True:
     ohlc_bittrex_grabber(market_input)
     data = parse_json_file(file_one)
-    con = create_connection('retracer.sqlite')
+    con = create_connection(db_list)
     insert_ohlc(con,data[0])
-    b = target_search(con,data,'retracer.sqlite')
+    b = target_search(con,data,db_list)
 
     if b:
         while True:
             ohlc_bittrex_grabber(market_input)
             data = parse_json_file(file_one)
-            con = create_connection('retracer.sqlite')
+            con = create_connection(db_list)
             insert_ohlc(con, data[0])
 
             fib_scale = MarketAction(b,data,quantity=1000)
