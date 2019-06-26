@@ -1,11 +1,11 @@
 import json
-
+from psycopg2 import *
 import requests
 import time
 from threading import Thread
 
-from databasefunction import create_connection, insert_ohlc, select_target
-from graphs import graph_it
+from databasefunction import create_connection, insert_ohlc, select_target, create_table
+
 
 
 class MarketAction:
@@ -51,7 +51,7 @@ def target_search(con,OHLC,db_list):
         bid = data['Bid']
         last = data['Last']
         con = create_connection(db_list)
-        compare = select_target(con,'Last','ohlc', 'Last  <= "'+str(last).strip(',')+'"')
+        compare = select_target(con,'Last','ohlc', 'Last  <= '+str(last).strip(','))
         for i in compare:
             if last == prevDay or last ==highs or last==bid or last == i:
                 highs_target = data['Last']
@@ -89,19 +89,21 @@ def parse_json_file(json_file) :
         return OHLC
 
 
-file_one = input('input a junk file path')
-user = input("please enter a db user name")
-password = input("please enter a db password name")
-db = input("please enter a db name")
-db_list = [user,password,'127.0.0.1','5432',db]
+file_one = input('input a junk file path: ')
+#user = input("please enter a db user name: ")
+#password = input("please enter a db password name: ")
+#db = input("please enter a db name: ")
+#db_list = [user,password,'127.0.0.1','5432',db]
+db_list = ['flawlessgarnet','v651a35!','127.0.0.1','5432','incubator']
 market_input = input("please tell me a market format x-y: ")
+con = create_connection(db_list)
+# create_table(con)
 while True:
     ohlc_bittrex_grabber(market_input,file_one)
     data = parse_json_file(file_one)
     con = create_connection(db_list)
     insert_ohlc(con,data[0])
     b = target_search(con,data,db_list)
-
     if b:
         while True:
             ohlc_bittrex_grabber(market_input)
