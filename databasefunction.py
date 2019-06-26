@@ -3,7 +3,7 @@ import psycopg2
 
 def create_connection(db_list):
     try:
-        connection = psycopg2.connect(user = 'flawlessgarnet', password = 'v651a35!', database = 'incubator')
+        connection = psycopg2.connect(user = db_list[0], password = db_list[1], database = db_list[2])
         return connection
     except Exception:
         print(Exception)

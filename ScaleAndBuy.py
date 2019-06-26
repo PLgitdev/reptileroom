@@ -90,11 +90,11 @@ def parse_json_file(json_file) :
 
 
 file_one = input('input a junk file path: ')
-#user = input("please enter a db user name: ")
-#password = input("please enter a db password name: ")
-#db = input("please enter a db name: ")
-#db_list = [user,password,'127.0.0.1','5432',db]
-db_list = ['flawlessgarnet','v651a35!','127.0.0.1','5432','incubator']
+user = input("please enter a db user name: ")
+password = input("please enter a db password name: ")
+db = input("please enter a db name: ")
+db_list = [user,password,db]
+# db_list = []
 market_input = input("please tell me a market format x-y: ")
 con = create_connection(db_list)
 # create_table(con)
